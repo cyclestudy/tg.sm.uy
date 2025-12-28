@@ -2,20 +2,31 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     
-    // 解析路径: /cdn4/file/xxxx.jpg
+    // 关键修正：解析路径中的 cdn 节点 (例如 /cdn5/file/...)
     const pathParts = url.pathname.split('/');
-    const cdnNode = pathParts[1]; // 提取 'cdn4', 'cdn5' 等
+    // pathParts[1] 应该是 'cdn4' 或 'cdn5'
+    const cdnNode = pathParts[1];
     
+    // 如果路径里没有 cdn 信息，说明请求格式不对
     if (!cdnNode || !cdnNode.startsWith('cdn')) {
-        return new Response('Invalid CDN Path. Use format: /cdnX/file/...', { status: 400 });
+        // 兼容旧链接的 fallback (可选)
+        if(url.pathname.startsWith('/file')) {
+             url.hostname = 'cdn4.telesco.pe';
+             const newReq = new Request(url, request);
+             newReq.headers.set('Host', 'cdn4.telesco.pe');
+             return fetch(newReq);
+        }
+        return new Response('路径错误: 请使用 /cdnX/file/... 格式', { status: 400 });
     }
 
-    // 动态指向目标: cdn5.telesco.pe
+    // 动态构建目标: cdn5.telesco.pe
     const targetHost = cdnNode + '.telesco.pe';
     
-    // 移除 /cdn4 前缀，恢复原始路径 /file/xxx...
+    // 移除 /cdn5 前缀，变成原始的 /file/xxxx.jpg
+    const realPath = '/' + pathParts.slice(2).join('/');
+    
     url.hostname = targetHost;
-    url.pathname = '/' + pathParts.slice(2).join('/');
+    url.pathname = realPath;
     
     const newRequest = new Request(url, {
         method: request.method,
@@ -23,7 +34,7 @@ export default {
         redirect: 'follow'
     });
     
-    // 动态修改 Host 头
+    // 强制修改 Host
     newRequest.headers.set('Host', targetHost);
     
     return fetch(newRequest);
