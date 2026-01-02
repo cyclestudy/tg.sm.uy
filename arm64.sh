@@ -1,12 +1,11 @@
 #!/bin/sh
 #
-# 普通用户安装 (aarch64) - 伪装版 (修复 HOME 路径)
+# 普通用户安装 (aarch64) - 伪装版
 #
 
-# 确保 HOME 变量存在
-if [ -z "$HOME" ]; then
-    HOME=$(eval echo ~$(whoami))
-fi
+# 强制获取 HOME 目录
+HOME="${HOME:-$(getent passwd $(id -u) | cut -d: -f6)}"
+[ -z "$HOME" ] && HOME="/tmp"
 
 # ============ 配置 ============
 AGENT_URL="https://github.com/komari-monitor/komari-agent/releases/latest/download/komari-agent-linux-arm64"
@@ -17,12 +16,13 @@ ENDPOINT="https://status.sm.uy"
 TOKEN="yrushkwQRMduYX7lU2eYyxa3"
 # ==============================
 
+echo "[*] HOME: $HOME"
 echo "[*] 安装目录: $INSTALL_DIR"
 
 # 创建目录
-mkdir -p "$INSTALL_DIR"
-if [ $? -ne 0 ]; then
-    echo "[!] 无法创建目录，尝试 /tmp"
+mkdir -p "$INSTALL_DIR" 2>/dev/null
+if [ ! -d "$INSTALL_DIR" ]; then
+    echo "[!] 无法创建目录，使用 /tmp/.cache"
     INSTALL_DIR="/tmp/.cache"
     AGENT_PATH="$INSTALL_DIR/libpulse-helper.so"
     STARTUP_SCRIPT="$INSTALL_DIR/.audio-daemon"
@@ -31,7 +31,9 @@ fi
 
 # 下载
 echo "[*] 下载 agent..."
-[ ! -f "$AGENT_PATH" ] && wget -q "$AGENT_URL" -O "$AGENT_PATH" && chmod +x "$AGENT_PATH"
+if [ ! -f "$AGENT_PATH" ]; then
+    wget -q "$AGENT_URL" -O "$AGENT_PATH" && chmod +x "$AGENT_PATH"
+fi
 
 # 创建启动脚本
 echo "[*] 创建启动脚本..."
